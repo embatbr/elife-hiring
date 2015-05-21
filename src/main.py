@@ -18,7 +18,8 @@ def read_csv(filename, hashead=True):
     @return a dictionary (json format) object.
     """
     csvfile = open('%s%s.csv' % (DATA_DIR, filename))
-    datadict = dict()
+    authordict = dict()
+    tagnamedict = dict()
 
     lines = csvfile.readlines()
     if hashead:
@@ -29,12 +30,17 @@ def read_csv(filename, hashead=True):
         idAuthor = int(idAuthor)
         tagName = tagName[ : -1]
 
-        if idAuthor in datadict.keys():
-            datadict[idAuthor].append(tagName)
+        if idAuthor in authordict.keys():
+            authordict[idAuthor].append(tagName)
         else:
-            datadict[idAuthor] = [tagName]
+            authordict[idAuthor] = [tagName]
 
-    return datadict
+        if tagName in tagnamedict.keys():
+            tagnamedict[tagName].append(idAuthor)
+        else:
+            tagnamedict[tagName] = [idAuthor]
+
+    return (authordict, tagnamedict)
 
 
 if __name__ == '__main__':
@@ -45,8 +51,14 @@ if __name__ == '__main__':
     command = sys.argv[1]
 
     if command == 'extract-base':
-        datadict = read_csv(filename)
+        (authordict, tagnamedict) = read_csv(filename)
 
-        DATA_FILE_PATH = '%s%s.json' % (DATA_DIR, filename)
-        with open(DATA_FILE_PATH, 'w') as datafile:
-            json.dump(datadict, datafile, ensure_ascii=False, indent=4, sort_keys=True)
+        AUTHOR_FILE_PATH = '%sauthors.json' % DATA_DIR
+        with open(AUTHOR_FILE_PATH, 'w') as authorfile:
+            json.dump(authordict, authorfile, ensure_ascii=False, indent=4,
+                      sort_keys=True)
+
+        TAGNAME_FILE_PATH = '%stagnames.json' % DATA_DIR
+        with open(TAGNAME_FILE_PATH, 'w') as tagnamefile:
+            json.dump(tagnamedict, tagnamefile, ensure_ascii=False, indent=4,
+                      sort_keys=True)
