@@ -5,24 +5,28 @@
 """
 
 
-import json
-from common import DATA_DIR
+from common import DATA_DIR, dumpdict, loaddict
 
 
-def read_csv(filename, hashead=True):
+CSV_FILENAME = 'malhacao-tags-users-basket'
+AUTHORS_FILENAME = 'authors'
+TAGNAMES_FILENAME = 'tagnames'
+SUPP_COUNT_FILENAME = 'support-counts'
+
+
+def read_csv(has_head=True):
     """Reads a CSV file and return a dictionary.
 
-    @param filename: name of the database file.
-    @param hashead: determines if database file has head (default True).
+    @param has_head: determines if database file has head (default True).
 
     @return a dictionary (json format) object.
     """
-    csvfile = open('%s%s.csv' % (DATA_DIR, filename))
-    authordict = dict()
-    tagnamedict = dict()
+    csvfile = open('%s%s.csv' % (DATA_DIR, CSV_FILENAME))
+    authorsdict = dict()
+    tagnamesdict = dict()
 
     lines = csvfile.readlines()
-    if hashead:
+    if has_head:
         lines = lines[1 : ]
 
     for line in lines:
@@ -30,35 +34,75 @@ def read_csv(filename, hashead=True):
         idAuthor = int(idAuthor)
         tagName = tagName[ : -1]
 
-        if idAuthor in authordict.keys():
-            authordict[idAuthor].append(tagName)
+        if idAuthor in authorsdict.keys():
+            authorsdict[idAuthor].append(tagName)
         else:
-            authordict[idAuthor] = [tagName]
+            authorsdict[idAuthor] = [tagName]
 
-        if tagName in tagnamedict.keys():
-            tagnamedict[tagName].append(idAuthor)
+        if tagName in tagnamesdict.keys():
+            tagnamesdict[tagName].append(idAuthor)
         else:
-            tagnamedict[tagName] = [idAuthor]
+            tagnamesdict[tagName] = [idAuthor]
 
-    return (authordict, tagnamedict)
+    return (authorsdict, tagnamesdict)
+
+
+def support_count():
+    tagnamesdict = loaddict(TAGNAMES_FILENAME)
+    tagnames = sorted(tagnamesdict.keys())
+    bin_itemsets = [(X, Y) for X in tagnames for Y in tagnames if X != Y]
+
+    support_counts = dict()
+
+    # unitary
+    for key in tagnames:
+        support_counts[key] = len(tagnamesdict[key])
+
+    #binary
+    for (X, Y) in bin_itemsets:
+        x_list = tagnamesdict[X]
+        y_list = tagnamesdict[Y]
+        equals = set(x_list).intersection(y_list)
+        support_counts['%s + %s' % (X, Y)] = len(equals)
+
+    return support_counts
+
+def association():
+    tagnamesdict = loaddict(TAGNAMES_FILENAME)
+    tagnames = sorted(tagnamesdict.keys())
+    bin_itemsets = [(X, Y) for X in tagnames for Y in tagnames if X != Y]
+
+    authorsdict = loaddict(AUTHORS_FILENAME)
+    N = len(authorsdict.keys())
+    support_counts = loaddict(SUPP_COUNT_FILENAME)
+
+    supports = dict()
+    confidences = dict()
+    for (X, Y) in bin_itemsets:
+        supp_X_plus_Y = support_counts['%s + %s' % (X, Y)]
+        supports['%s => %s' % (X, Y)] = supp_X_plus_Y / N
+        confidences['%s => %s' % (X, Y)] = supp_X_plus_Y / support_counts[X]
+
+    return (supports, confidences)
 
 
 if __name__ == '__main__':
     import sys
 
-    filename = 'malhacao-tags-users-basket'
-
     command = sys.argv[1]
 
-    if command == 'extract-base':
-        (authordict, tagnamedict) = read_csv(filename)
+    if command == 'extract-csv':
+        dictionaries = read_csv()
 
-        AUTHOR_FILE_PATH = '%sauthors.json' % DATA_DIR
-        with open(AUTHOR_FILE_PATH, 'w') as authorfile:
-            json.dump(authordict, authorfile, ensure_ascii=False, indent=4,
-                      sort_keys=True)
+        filenames = ['authors', 'tagnames']
+        for (filename, dictionary) in zip(filenames, dictionaries):
+            dumpdict(filename, dictionary)
 
-        TAGNAME_FILE_PATH = '%stagnames.json' % DATA_DIR
-        with open(TAGNAME_FILE_PATH, 'w') as tagnamefile:
-            json.dump(tagnamedict, tagnamefile, ensure_ascii=False, indent=4,
-                      sort_keys=True)
+    elif command == 'support-counts':
+        support_counts = support_count()
+        dumpdict('support-counts', support_counts)
+
+    elif command == 'association':
+        (supports, confidences) = association()
+        dumpdict('supports', supports)
+        dumpdict('confidences', confidences)
