@@ -15,11 +15,11 @@ SUPP_COUNT_FILENAME = 'support-counts'
 
 
 def read_csv(has_head=True):
-    """Reads a CSV file and return a dictionary.
+    """Reads a CSV file and returns dictionaries for authors and tagnames.
 
     @param has_head: determines if database file has head (default True).
 
-    @return a dictionary (json format) object.
+    @returns: two dictionaries: a authors dictionary and a tagnames dictionary.
     """
     csvfile = open('%s%s.csv' % (DATA_DIR, CSV_FILENAME))
     authorsdict = dict()
@@ -48,6 +48,11 @@ def read_csv(has_head=True):
 
 
 def support_count():
+    """Calculates the number of occurrencies of itemsets in the authors' set.
+
+    @returns: a dictionary containing the number of occurrencies for each tagname
+    as well as for each tuple of different tagnames.
+    """
     tagnamesdict = loaddict(TAGNAMES_FILENAME)
     tagnames = sorted(tagnamesdict.keys())
     bin_itemsets = [(X, Y) for X in tagnames for Y in tagnames if X != Y]
@@ -68,6 +73,11 @@ def support_count():
     return support_counts
 
 def association():
+    """Calculates the values of support and confidence for the tuples formed by
+    different tagnames.
+
+    @returns: two dictionaries: a supports dictionary and a confidences dictionary.
+    """
     tagnamesdict = loaddict(TAGNAMES_FILENAME)
     tagnames = sorted(tagnamesdict.keys())
     bin_itemsets = [(X, Y) for X in tagnames for Y in tagnames if X != Y]
