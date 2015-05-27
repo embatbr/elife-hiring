@@ -1,0 +1,46 @@
+{
+    "Altas_Horas => Malhação": {
+        "confidence": 0.5045045045045045,
+        "support": 0.021806853582554516
+    },
+    "Botafogo_de_Futebol_e_Regatas => Club_de_Regatas_Vasco_da_Gama": {
+        "confidence": 0.5588235294117647,
+        "support": 0.02219626168224299
+    },
+    "Capricho => Malhação": {
+        "confidence": 0.708,
+        "support": 0.0689252336448598
+    },
+    "Capricho_Awards => Capricho": {
+        "confidence": 0.8458149779735683,
+        "support": 0.037383177570093455
+    },
+    "Capricho_Awards => Malhação": {
+        "confidence": 0.8105726872246696,
+        "support": 0.03582554517133956
+    },
+    "Chay_Suede => Malhação": {
+        "confidence": 0.6568047337278107,
+        "support": 0.02161214953271028
+    },
+    "Harry_Potter => One_Direction": {
+        "confidence": 0.5036144578313253,
+        "support": 0.04069314641744548
+    },
+    "MTV => Justin_Bieber": {
+        "confidence": 0.5412371134020618,
+        "support": 0.02044392523364486
+    },
+    "Manu_Gavassi => Malhação": {
+        "confidence": 0.745,
+        "support": 0.029010903426791277
+    },
+    "Selena => Justin_Bieber": {
+        "confidence": 0.4841628959276018,
+        "support": 0.020833333333333332
+    },
+    "Sociedade_Esportiva_Palmeiras => Sport_Club_Corinthians_Paulista": {
+        "confidence": 0.599009900990099,
+        "support": 0.023559190031152647
+    }
+}
