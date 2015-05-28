@@ -1,49 +1,11 @@
 #!/usr/bin/python3.4
 
-"""Simple module just to resolve the problem.
-@author Eduardo Tenório (embatbr@gmail.com)
+"""Module to receive commands from terminal and execute actions.
 """
 
 
-from common import DATA_DIR, dumpdict, loaddict
-
-
-CSV_FILENAME = 'malhacao-tags-users-basket'
-AUTHORS_FILENAME = 'authors'
-TAGNAMES_FILENAME = 'tagnames'
-
-
-def read_csv(has_head=True):
-    """Reads a CSV file and returns dictionaries for authors and tagnames.
-
-    @param has_head: determines if database file has head (default True).
-
-    @returns: two dictionaries: a authors dictionary and a tagnames dictionary.
-    """
-    csvfile = open('%s%s.csv' % (DATA_DIR, CSV_FILENAME))
-    authorsdict = dict()
-    tagnamesdict = dict()
-
-    lines = csvfile.readlines()
-    if has_head:
-        lines = lines[1 : ]
-
-    for line in lines:
-        (idAuthor, tagName) = line.split(',')
-        idAuthor = int(idAuthor)
-        tagName = tagName[ : -1]
-
-        if idAuthor in authorsdict.keys():
-            authorsdict[idAuthor].append(tagName)
-        else:
-            authorsdict[idAuthor] = [tagName]
-
-        if tagName in tagnamesdict.keys():
-            tagnamesdict[tagName].append(idAuthor)
-        else:
-            tagnamesdict[tagName] = [idAuthor]
-
-    return (authorsdict, tagnamesdict)
+from common import DATA_DIR, CSV_FILENAME, AUTHORS_FILENAME, TAGNAMES_FILENAME
+import bases
 
 
 def apriori_gen(min_supp=0):
@@ -62,10 +24,10 @@ def apriori_gen(min_supp=0):
     @returns: a dictionary containing the number of occurrencies for each tagname
     as well as for each tuple of different tagnames.
     """
-    tagnamesdict = loaddict(TAGNAMES_FILENAME)
+    tagnamesdict = bases.loaddict(TAGNAMES_FILENAME)
     tagnames = sorted(tagnamesdict.keys())
     supports = dict()
-    authorsdict = loaddict(AUTHORS_FILENAME)
+    authorsdict = bases.loaddict(AUTHORS_FILENAME)
     N = len(authorsdict.keys())
     N_min = int(min_supp * N) # used to avoid divide every supp_count by N, even when discarded
 
@@ -131,7 +93,7 @@ def calc_rules(min_supp=0, min_conf=0):
 
     @returns: the dictionary of rules.
     """
-    tagnamesdict = loaddict(TAGNAMES_FILENAME)
+    tagnamesdict = bases.loaddict(TAGNAMES_FILENAME)
     tagnames = sorted(tagnamesdict.keys())
 
     (supports, bin_itemsets) = apriori_gen(min_supp)
@@ -153,17 +115,17 @@ if __name__ == '__main__':
 
     if command == 'extract-csv':
         print('Extracting CSV files')
-        dictionaries = read_csv()
+        dictionaries = bases.read_csv()
 
         filenames = ['authors', 'tagnames']
         for (filename, dictionary) in zip(filenames, dictionaries):
-            dumpdict(filename, dictionary)
+            bases.dumpdict(filename, dictionary)
 
     elif command == 'rule':
         X = args[0]
         Y = args[1]
 
-        authorsdict = loaddict(AUTHORS_FILENAME)
+        authorsdict = bases.loaddict(AUTHORS_FILENAME)
         supports = apriori_gen()[0]
         rule = calc_rule(X, Y, supports)
 
@@ -181,4 +143,4 @@ if __name__ == '__main__':
         print('min_conf = %.02f%%' % (min_conf*100))
 
         rules = calc_rules(min_supp, min_conf)
-        dumpdict('rules_%.02f_%.02f' % (min_supp*100, min_conf*100), rules)
+        bases.dumpdict('rules_%.02f_%.02f' % (min_supp*100, min_conf*100), rules)
