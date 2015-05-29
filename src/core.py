@@ -2,6 +2,7 @@
 """
 
 import math
+import itertools
 
 from common import TAGNAMES_FILENAME, AUTHORS_FILENAME, MAX_INT
 import bases
@@ -21,7 +22,14 @@ class ItemsetGenError(Exception):
             is 1'
 
 
-def calc_support_count(itemset, tagnamesdict):
+def k_ary_support_count(itemset, tagnamesdict):
+    """Calculates the support count for non unitary itemsets.
+
+    @param itemset: the set of items.
+    @param tagnamesdict: the dictionary of tagnames.
+
+    @returns: the support count
+    """
     X = itemset[0]
     x_list = tagnamesdict[X]
     inter = set(x_list)
@@ -41,6 +49,8 @@ def gen_itemsets(maxsize=2, minsupport=0):
     from 1 to maxsize. The minimum value must be 1. Default 2.
     @param minsupport: the minimum value a support must have to the itemset X be
     in the set of valid itemsets. Default 0.
+
+    @returns: the dictionary with itemsets and its respective support counts.
     """
     if maxsize < 1:
         raise ItemsetGenError('maxsize')
@@ -51,35 +61,77 @@ def gen_itemsets(maxsize=2, minsupport=0):
     N_min = math.ceil(minsupport * N)
     tagnames = sorted(tagnamesdict.keys())
 
-    itemsets_list = [list() for i in range(maxsize)]
-    support_count_dict = dict()
+    support_counts = dict()
+    itemsets = list()
 
     # unitary itemsets
     for tagname in tagnames:
         support_count = len(tagnamesdict[tagname])
         if support_count > N_min:
-            itemsets_list[0].append([tagname])
-            support_count_dict[tagname] = support_count
+            itemsets.append([tagname])
+            support_counts[tagname] = support_count
 
     # k-ary itemsets, with k > 1
     for size in range(1, maxsize):
-        itemsets = itemsets_list[size - 1]
+        new_itemsets = list()
+
         for i in range(len(itemsets)):
             X = itemsets[i]
             for j in range(i + 1, len(itemsets)):
                 Y = itemsets[j]
+
                 if X[ : -1] == Y [ : -1]:
                     newitem = X[ : -1] + [X[-1]] + [Y[-1]]
-                    support_count = calc_support_count(newitem, tagnamesdict)
+                    support_count = k_ary_support_count(newitem, tagnamesdict)
                     if support_count > N_min:
-                        itemsets_list[size].append(newitem)
+                        new_itemsets.append(newitem)
                         newkey = ' & '.join(newitem)
-                        support_count_dict[newkey] = support_count
+                        support_counts[newkey] = support_count
 
-    return support_count_dict
+        itemsets = new_itemsets
+
+    return support_counts
 
 
-maxsize = 3
-minsupport = 0
-support_count_dict = gen_itemsets(maxsize, minsupport)
-bases.dumpdict('support_counts', support_count_dict)
+def calc_confidence(itemsets, support_counts, separator=-1):
+    """Calculates the confidence of a rule for X => Y.
+
+    @param itemsets: the items to calculate the rule.
+    @param support_counts: a dictionary of support counts.
+    @param separator: in which point of itemsets the list is split. Default -1,
+    Y = the last element.
+
+    @returns: the confidence
+    """
+    X = ' & '.join(sorted(itemsets[ : separator]))
+    X_and_Y = ' & '.join(sorted(itemsets))
+
+    if X_and_Y in support_counts.keys():
+        conf_X_to_Y = support_counts[X_and_Y] / support_counts[X] # supports[X] is present if supports[key] is
+        return conf_X_to_Y
+
+    return 0
+
+def calc_rules(minconfidence=0):
+    """Returns all rules with confidence of at least minconfidence.
+
+    @param minconfidence: the minimum value for confidence.
+
+    @returns: the rules
+    """
+    support_counts = bases.loaddict('support-counts')
+    rules = dict()
+
+    for supp_key in support_counts.keys():
+        keys = supp_key.split(' & ')
+        if len(keys) > 1:
+            permutations = itertools.permutations(keys)
+            for permutation in permutations:
+                for separator in range(1, len(permutation)): # o separador gera repetição
+                    confidence = calc_confidence(permutation, support_counts, separator)
+                    if confidence > minconfidence:
+                        X = ' & '.join(sorted(permutation[ : separator]))
+                        Y = ' & '.join(sorted(permutation[separator : ]))
+                        rules['%s => %s' % (X, Y)] = confidence
+
+    return rules

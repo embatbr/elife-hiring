@@ -6,6 +6,7 @@ import sys
 
 
 DATA_DIR = '../data/'
+RESULTS_DIR = '../results/'
 
 CSV_FILENAME = 'malhacao-tags-users-basket'
 AUTHORS_FILENAME = 'authors'

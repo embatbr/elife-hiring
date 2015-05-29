@@ -40,21 +40,21 @@ def read_csv(has_head=True):
     return (authorsdict, tagnamesdict)
 
 
-def dumpdict(filename, dictionary):
+def dumpdict(filename, dictionary, path=DATA_DIR):
     """Saves a dictionary in a json file.
 
     @param filename: name of file without ".json".
     @param dictionary: dictionary to be saved.
     """
-    with open('%s%s.json' % (DATA_DIR, filename), 'w') as jsonfile:
+    with open('%s%s.json' % (path, filename), 'w') as jsonfile:
         json.dump(dictionary, jsonfile, ensure_ascii=False, indent=4, sort_keys=True)
 
-def loaddict(filename):
+def loaddict(filename, path=DATA_DIR):
     """Loads a dictionary from a json file.
 
     @param filename: name of file without ".json".
 
     @returns: a dictionary.
     """
-    dictfile = open('%s%s.json' % (DATA_DIR, filename))
+    dictfile = open('%s%s.json' % (path, filename))
     return json.load(dictfile)
