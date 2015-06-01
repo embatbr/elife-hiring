@@ -1,0 +1,142 @@
+{
+    "Altas_Horas => Malhação": {
+        "confidence": 0.5045045045045045,
+        "support": 0.021806853582554516
+    },
+    "Alto_Astral => Malhação": {
+        "confidence": 0.6415094339622641,
+        "support": 0.0132398753894081
+    },
+    "Babilônia => Malhação": {
+        "confidence": 0.627906976744186,
+        "support": 0.010514018691588784
+    },
+    "Botafogo_de_Futebol_e_Regatas & Clube_de_Regatas_do_Flamengo => Club_de_Regatas_Vasco_da_Gama": {
+        "confidence": 0.6951219512195121,
+        "support": 0.011098130841121495
+    },
+    "Botafogo_de_Futebol_e_Regatas => Club_de_Regatas_Vasco_da_Gama": {
+        "confidence": 0.5588235294117647,
+        "support": 0.02219626168224299
+    },
+    "Capricho & Capricho_Awards => Malhação": {
+        "confidence": 0.8072916666666666,
+        "support": 0.030179127725856698
+    },
+    "Capricho & Chay_Suede => Malhação": {
+        "confidence": 0.7945205479452054,
+        "support": 0.011292834890965732
+    },
+    "Capricho & GNT => Malhação": {
+        "confidence": 0.6774193548387096,
+        "support": 0.012266355140186916
+    },
+    "Capricho & Manu_Gavassi => Malhação": {
+        "confidence": 0.9402985074626866,
+        "support": 0.012266355140186916
+    },
+    "Capricho & Praia => Malhação": {
+        "confidence": 0.75,
+        "support": 0.014018691588785047
+    },
+    "Capricho & Rodrigo_Simas => Malhação": {
+        "confidence": 0.8656716417910447,
+        "support": 0.011292834890965732
+    },
+    "Capricho & YouTube => Malhação": {
+        "confidence": 0.8088235294117647,
+        "support": 0.010708722741433021
+    },
+    "Capricho => Malhação": {
+        "confidence": 0.708,
+        "support": 0.0689252336448598
+    },
+    "Capricho_Awards & Malhação => Capricho": {
+        "confidence": 0.842391304347826,
+        "support": 0.030179127725856698
+    },
+    "Capricho_Awards => Capricho": {
+        "confidence": 0.8458149779735683,
+        "support": 0.037383177570093455
+    },
+    "Capricho_Awards => Capricho & Malhação": {
+        "confidence": 0.6828193832599119,
+        "support": 0.030179127725856698
+    },
+    "Capricho_Awards => Malhação": {
+        "confidence": 0.8105726872246696,
+        "support": 0.03582554517133956
+    },
+    "Chay_Suede & Malhação => Capricho": {
+        "confidence": 0.5225225225225225,
+        "support": 0.011292834890965732
+    },
+    "Chay_Suede => Malhação": {
+        "confidence": 0.6568047337278107,
+        "support": 0.02161214953271028
+    },
+    "Club_de_Regatas_Vasco_da_Gama & Clube_de_Regatas_do_Flamengo => Botafogo_de_Futebol_e_Regatas": {
+        "confidence": 0.6477272727272727,
+        "support": 0.011098130841121495
+    },
+    "Demi_Lovato & One_Direction => Justin_Bieber": {
+        "confidence": 0.5463917525773195,
+        "support": 0.010319314641744548
+    },
+    "Fluminense_Football_Club => Sport_Club_Corinthians_Paulista": {
+        "confidence": 0.5093167701863354,
+        "support": 0.015965732087227413
+    },
+    "Gay & Harry_Potter => One_Direction": {
+        "confidence": 0.5977011494252874,
+        "support": 0.010124610591900311
+    },
+    "Gay & One_Direction => Harry_Potter": {
+        "confidence": 0.5909090909090909,
+        "support": 0.010124610591900311
+    },
+    "Harry_Potter & Justin_Bieber => One_Direction": {
+        "confidence": 0.7093023255813954,
+        "support": 0.011876947040498442
+    },
+    "Harry_Potter => One_Direction": {
+        "confidence": 0.5036144578313253,
+        "support": 0.04069314641744548
+    },
+    "MTV => Justin_Bieber": {
+        "confidence": 0.5412371134020618,
+        "support": 0.02044392523364486
+    },
+    "Malhação & Rodrigo_Simas => Capricho": {
+        "confidence": 0.6041666666666666,
+        "support": 0.011292834890965732
+    },
+    "Manu_Gavassi => Malhação": {
+        "confidence": 0.745,
+        "support": 0.029010903426791277
+    },
+    "Multishow => Malhação": {
+        "confidence": 0.5247524752475248,
+        "support": 0.010319314641744548
+    },
+    "Rede_Record => Malhação": {
+        "confidence": 0.5346534653465347,
+        "support": 0.010514018691588784
+    },
+    "Rodrigo_Simas => Capricho": {
+        "confidence": 0.5275590551181102,
+        "support": 0.013045171339563863
+    },
+    "Rodrigo_Simas => Malhação": {
+        "confidence": 0.7559055118110236,
+        "support": 0.018691588785046728
+    },
+    "Sociedade_Esportiva_Palmeiras => Sport_Club_Corinthians_Paulista": {
+        "confidence": 0.599009900990099,
+        "support": 0.023559190031152647
+    },
+    "Twitcam => Malhação": {
+        "confidence": 0.5866666666666667,
+        "support": 0.017133956386292833
+    }
+}

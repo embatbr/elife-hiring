@@ -93,11 +93,12 @@ def gen_itemsets(maxsize=2, minsupport=0):
     return support_counts
 
 
-def calc_confidence(itemsets, support_counts, separator=-1):
+def calc_confidence(itemsets, support_counts, N, separator=-1):
     """Calculates the confidence of a rule for X => Y.
 
     @param itemsets: the items to calculate the rule.
     @param support_counts: a dictionary of support counts.
+    @param N: number of authors.
     @param separator: in which point of itemsets the list is split. Default -1,
     Y = the last element.
 
@@ -107,19 +108,23 @@ def calc_confidence(itemsets, support_counts, separator=-1):
     X_and_Y = ' & '.join(sorted(itemsets))
 
     if X_and_Y in support_counts.keys():
+        supp_X_to_Y = support_counts[X_and_Y] / N
         conf_X_to_Y = support_counts[X_and_Y] / support_counts[X] # supports[X] is present if supports[key] is
-        return conf_X_to_Y
+        return (supp_X_to_Y, conf_X_to_Y)
 
-    return 0
+    return None
 
-def calc_rules(minconfidence=0):
-    """Returns all rules with confidence of at least minconfidence.
+def calc_rules(minsupp=0, mincon=0):
+    """Returns all rules with confidence of at least mincon.
 
-    @param minconfidence: the minimum value for confidence.
+    @param minsupp: the minimum value for support.
+    @param mincon: the minimum value for confidence.
 
     @returns: the rules
     """
     support_counts = bases.loaddict('support-counts')
+    authorsdict = bases.loaddict(AUTHORS_FILENAME)
+    N = len(authorsdict.keys())
     rules = dict()
 
     for supp_key in support_counts.keys():
@@ -129,11 +134,13 @@ def calc_rules(minconfidence=0):
             for permutation in permutations:
                 # repetitions corrected ahead (avoid re-calculation of confidence)
                 for separator in range(1, len(permutation)):
-                    confidence = calc_confidence(permutation, support_counts, separator)
-                    if confidence > minconfidence:
+                    (supp, conf) = calc_confidence(permutation, support_counts, N,
+                                                   separator)
+
+                    if (supp > minsupp) and (conf > mincon):
                         X = ' & '.join(sorted(permutation[ : separator]))
                         Y = ' & '.join(sorted(permutation[separator : ]))
                         rule_key = '%s => %s' % (X, Y)
-                        rules[rule_key] = confidence
+                        rules[rule_key] = {'support' : supp, 'confidence' : conf}
 
     return rules
