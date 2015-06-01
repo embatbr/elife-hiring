@@ -127,11 +127,13 @@ def calc_rules(minconfidence=0):
         if len(keys) > 1:
             permutations = itertools.permutations(keys)
             for permutation in permutations:
-                for separator in range(1, len(permutation)): # o separador gera repetição
+                # repetitions corrected ahead (avoid re-calculation of confidence)
+                for separator in range(1, len(permutation)):
                     confidence = calc_confidence(permutation, support_counts, separator)
                     if confidence > minconfidence:
                         X = ' & '.join(sorted(permutation[ : separator]))
                         Y = ' & '.join(sorted(permutation[separator : ]))
-                        rules['%s => %s' % (X, Y)] = confidence
+                        rule_key = '%s => %s' % (X, Y)
+                        rules[rule_key] = confidence
 
     return rules
